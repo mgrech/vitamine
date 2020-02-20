@@ -57,18 +57,16 @@ namespace vitamine::proxyd
 	template <typename Packet>
 	Buffer serializePacket(Packet const& packet)
 	{
-		// TODO: optimization: merge prepend operations to avoid shifting bytes more than once
-
 		Buffer buffer;
 		serializePacketPayload(buffer, packet);
 
 		UInt8 idBuffer[detail::VARINT32_MAX_ENCODED_SIZE];
 		auto idLength = detail::encodeVarInt32(idBuffer, Packet::ID);
-		buffer.prepend(idBuffer, idLength);
 
-		UInt8 lengthBuffer[detail::VARINT32_MAX_ENCODED_SIZE];
-		auto lengthLength = detail::encodeVarInt32(lengthBuffer, buffer.size());
-		buffer.prepend(lengthBuffer, lengthLength);
+		UInt8 headerBuffer[2 * detail::VARINT32_MAX_ENCODED_SIZE];
+		auto lengthLength = detail::encodeVarInt32(headerBuffer, buffer.size() + idLength);
+		std::memcpy(headerBuffer + lengthLength, idBuffer, idLength);
+		buffer.prepend(headerBuffer, lengthLength + idLength);
 
 		return buffer;
 	}
