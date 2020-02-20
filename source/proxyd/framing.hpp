@@ -65,7 +65,14 @@ namespace vitamine::proxyd
 
 		UInt8 headerBuffer[2 * detail::VARINT32_MAX_ENCODED_SIZE];
 		auto lengthLength = detail::encodeVarInt32(headerBuffer, buffer.size() + idLength);
-		std::memcpy(headerBuffer + lengthLength, idBuffer, idLength);
+
+		// note: we intentionally use the entire buffer size instead of the actual length
+		// this may copy uninitialized memory, but it's not actually read in that case
+		// this is faster, because the size to memcpy is now a compile-time constant,
+		// which means the compiler can just emit the copy instructions directly instead of calling memcpy
+		// does it matter? probably not, but it's a cool trick
+		std::memcpy(headerBuffer + lengthLength, idBuffer, sizeof idBuffer);
+
 		buffer.prepend(headerBuffer, lengthLength + idLength);
 
 		return buffer;
