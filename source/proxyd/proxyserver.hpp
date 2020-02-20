@@ -67,9 +67,9 @@ namespace vitamine::proxyd
 		{
 			auto state = std::make_shared<StateMachine>(&_globalState, connection);
 
-			// TODO: find a better solution
-			// creates shared_ptr ownership cycle, which needs to be cleared manually
-			connection->userPointer(state);
+			// using shared_ptr instead would create an ownership cycle
+			// storing a raw pointer is safe, because the state machine map holds a shared_ptr
+			connection->userPointer(&*state);
 
 			std::lock_guard lock(_mutex);
 			_states.emplace(connection, std::move(state));
@@ -77,15 +77,12 @@ namespace vitamine::proxyd
 
 		void onDataReceived(std::shared_ptr<IConnection> connection, Span<UInt8 const> data) final
 		{
-			auto state = std::static_pointer_cast<StateMachine>(connection->userPointer());
+			auto state = static_cast<StateMachine*>(connection->userPointer());
 			state->onBytesReceived(data);
 		}
 
 		void onClientDisconnected(std::shared_ptr<IConnection> connection) final
 		{
-			// clears shared_ptr ownership cycle
-			connection->userPointer(nullptr);
-
 			std::lock_guard lock(_mutex);
 			_states.erase(connection);
 		}

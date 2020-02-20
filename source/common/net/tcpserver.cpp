@@ -30,7 +30,7 @@ namespace vitamine::detail
 		std::vector<Buffer> _activeWriteQueue;
 		std::vector<boost::asio::const_buffer> _activeWriteQueueBuffers;
 
-		std::shared_ptr<void> _userPtr;
+		void* _userPtr;
 
 		static
 		void startWrite(std::shared_ptr<TcpServerConnection>&& connection)
@@ -99,12 +99,12 @@ namespace vitamine::detail
 			return boost::lexical_cast<std::string>(_endpoint);
 		}
 
-		virtual void userPointer(std::shared_ptr<void> ptr) final
+		virtual void userPointer(void* ptr) final
 		{
-			_userPtr = std::move(ptr);
+			_userPtr = ptr;
 		}
 
-		virtual std::shared_ptr<void> userPointer() final
+		virtual void* userPointer() final
 		{
 			return _userPtr;
 		}

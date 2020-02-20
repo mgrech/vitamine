@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <string>
 
 #include <common/buffer.hpp>
@@ -18,8 +17,8 @@ namespace vitamine
 		[[nodiscard]]
 		virtual std::string endpoint() const = 0;
 
-		virtual void userPointer(std::shared_ptr<void> ptr) = 0;
-		virtual std::shared_ptr<void> userPointer() = 0;
+		virtual void userPointer(void* ptr) = 0;
+		virtual void* userPointer() = 0;
 
 		virtual void send(Buffer buffer) = 0;
 		virtual void disconnect() = 0;
