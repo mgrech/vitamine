@@ -40,13 +40,6 @@ namespace vitamine
 			auto it = (UInt8 const*)data;
 			_data.insert(_data.begin(), it, it + size);
 		}
-
-		void* prepareWrite(UInt size)
-		{
-			auto offset = _data.size();
-			_data.resize(_data.size() + size);
-			return _data.data() + offset;
-		}
 	};
 
 	static_assert(sizeof(Buffer) == 64);
