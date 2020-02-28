@@ -11,7 +11,7 @@ set(GENDIR "${CMAKE_BINARY_DIR}/generated")
 set(GENERATED_FILES "${GENDIR}/ids.hpp")
 
 file(GLOB_RECURSE DATAGEN_FILES "datagen/*")
-add_custom_command(COMMAND python3 genheaders.py vitamine ${CMAKE_BINARY_DIR}
+add_custom_command(COMMAND python3 genheaders.py ${CMAKE_BINARY_DIR}
                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/datagen
                    DEPENDS ${DATAGEN_FILES}
                    OUTPUT ${GENERATED_FILES}

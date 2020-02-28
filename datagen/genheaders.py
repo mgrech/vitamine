@@ -2,7 +2,7 @@ import json
 import os
 import sys
 
-if len(sys.argv) != 3:
+if len(sys.argv) != 2:
 	sys.exit("invalid args")
 
 def loadTemplate():
@@ -30,7 +30,7 @@ def generateConstants(blocks):
 
 blockConstantOutput = loadTemplate().replace("$$$", generateConstants(loadBlocks()))
 
-outputDirPath = os.path.join(sys.argv[2], "generated")
+outputDirPath = os.path.join(sys.argv[1], "generated")
 os.makedirs(outputDirPath, exist_ok=True)
 
 outputFilePath = os.path.join(outputDirPath, "ids.hpp")
