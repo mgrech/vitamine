@@ -5,6 +5,7 @@
 #include <proxyd/bitpack.hpp>
 #include <proxyd/chunk.hpp>
 #include <proxyd/packets.hpp>
+#include <generated/ids.hpp>
 
 namespace
 {
@@ -544,15 +545,15 @@ namespace vitamine::proxyd
 
 					// TODO: check for fluids
 					// if the client thinks there is a block, but there is none (e.g. due to a race condition)
-					if(block == 0)
+					if(block == BLOCKID_MINECRAFT_AIR)
 						return;
 
-					block = 0;
+					block = BLOCKID_MINECRAFT_AIR;
 					chunkLock.unlock();
 
 					PacketBlockChange blockChange;
 					blockChange.location = packet.location;
-					blockChange.blockId = 0;
+					blockChange.blockId = BLOCKID_MINECRAFT_AIR;
 					broadcastLocally(blockChange, false);
 
 					break;
@@ -809,20 +810,20 @@ namespace vitamine::proxyd
 
 		for(UInt8 x = 0; x != 16; ++x)
 		for(UInt8 z = 0; z != 16; ++z)
-			chunk->sections[0]->blocks[0][z][x] = 33;
+			chunk->sections[0]->blocks[0][z][x] = BLOCKID_MINECRAFT_BEDROCK;
 
 		for(UInt8 x = 0; x != 16; ++x)
 		for(UInt8 z = 0; z != 16; ++z)
 		for(UInt8 y = 1; y != 14; ++y)
-			chunk->sections[0]->blocks[y][z][x] = 1;
+			chunk->sections[0]->blocks[y][z][x] = BLOCKID_MINECRAFT_STONE;
 
 		for(UInt8 x = 0; x != 16; ++x)
 		for(UInt8 z = 0; z != 16; ++z)
-			chunk->sections[0]->blocks[14][z][x] = 10;
+			chunk->sections[0]->blocks[14][z][x] = BLOCKID_MINECRAFT_DIRT;
 
 		for(UInt8 x = 0; x != 16; ++x)
 		for(UInt8 z = 0; z != 16; ++z)
-			chunk->sections[0]->blocks[15][z][x] = 9;
+			chunk->sections[0]->blocks[15][z][x] = BLOCKID_MINECRAFT_GRASS_BLOCK;
 
 		for(UInt8 x = 0; x != 16; ++x)
 		for(UInt8 z = 0; z != 16; ++z)
